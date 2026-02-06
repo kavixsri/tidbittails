@@ -10,6 +10,7 @@ const navLinks = [
   { href: "#emergency", label: "Emergency Help" },
   { href: "#events", label: "Events" },
   { href: "#volunteer", label: "Volunteer" },
+  { href: "#pupcafe", label: "Pup Café" },
 ];
 
 export const Header = () => {
