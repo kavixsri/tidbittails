@@ -14,6 +14,56 @@ export type Database = {
   }
   public: {
     Tables: {
+      cafe_reservations: {
+        Row: {
+          created_at: string
+          guest_email: string
+          guest_name: string
+          guest_phone: string
+          id: string
+          ngo_id: string | null
+          party_size: number
+          reservation_date: string
+          reservation_time: string
+          special_requests: string | null
+          status: string | null
+        }
+        Insert: {
+          created_at?: string
+          guest_email: string
+          guest_name: string
+          guest_phone: string
+          id?: string
+          ngo_id?: string | null
+          party_size?: number
+          reservation_date: string
+          reservation_time: string
+          special_requests?: string | null
+          status?: string | null
+        }
+        Update: {
+          created_at?: string
+          guest_email?: string
+          guest_name?: string
+          guest_phone?: string
+          id?: string
+          ngo_id?: string | null
+          party_size?: number
+          reservation_date?: string
+          reservation_time?: string
+          special_requests?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cafe_reservations_ngo_id_fkey"
+            columns: ["ngo_id"]
+            isOneToOne: false
+            referencedRelation: "ngos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       emergencies: {
         Row: {
           animal_type: string

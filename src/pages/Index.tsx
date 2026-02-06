@@ -7,6 +7,7 @@ import { NGODirectorySection } from "@/components/NGODirectorySection";
 import { EmergencySection } from "@/components/EmergencySection";
 import { EventsSection } from "@/components/EventsSection";
 import { VolunteerSection } from "@/components/VolunteerSection";
+import { PupCafeSection } from "@/components/PupCafeSection";
 import { Footer } from "@/components/Footer";
 
 const Index = () => {
@@ -76,6 +77,7 @@ const Index = () => {
         <EmergencySection />
         <EventsSection events={events} isLoading={eventsLoading} />
         <VolunteerSection />
+        <PupCafeSection ngos={ngos} isLoading={ngosLoading} />
       </main>
       <Footer />
     </div>
