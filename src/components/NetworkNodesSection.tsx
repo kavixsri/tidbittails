@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
-import { MapPin, Phone, Mail, Users, Heart, CheckCircle } from "lucide-react";
+import { MapPin, Phone, Users, Heart, CheckCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { DelhiMap } from "@/components/DelhiMap";
 
 interface RegionalNode {
   id: string;
@@ -13,11 +14,21 @@ interface RegionalNode {
   status: string;
   animals_under_care: number;
   volunteers_count: number;
-  facilities: unknown; // JSON type from database
+  facilities: unknown;
+  latitude: number | null;
+  longitude: number | null;
+}
+
+interface Ngo {
+  id: string;
+  name: string;
+  region: string;
+  address: string;
 }
 
 interface NetworkNodesSectionProps {
   nodes: RegionalNode[];
+  ngos: Ngo[];
   isLoading: boolean;
 }
 
@@ -45,7 +56,7 @@ const statusColors: Record<string, string> = {
   planned: "bg-blue-500",
 };
 
-export const NetworkNodesSection = ({ nodes, isLoading }: NetworkNodesSectionProps) => {
+export const NetworkNodesSection = ({ nodes, ngos, isLoading }: NetworkNodesSectionProps) => {
   return (
     <section id="nodes" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
@@ -67,57 +78,22 @@ export const NetworkNodesSection = ({ nodes, isLoading }: NetworkNodesSectionPro
           </p>
         </motion.div>
 
-        {/* Delhi Map Visualization */}
+        {/* Delhi Map */}
         <div className="mb-12">
-          <div className="relative max-w-3xl mx-auto">
-            <svg viewBox="0 0 400 350" className="w-full h-auto">
-              {/* Delhi outline - simplified */}
-              <path
-                d="M200 30 L320 80 L350 180 L320 280 L200 320 L80 280 L50 180 L80 80 Z"
-                fill="hsl(var(--muted))"
-                stroke="hsl(var(--border))"
-                strokeWidth="2"
-              />
-              
-              {/* Region divisions */}
-              <line x1="200" y1="30" x2="200" y2="320" stroke="hsl(var(--border))" strokeWidth="1" strokeDasharray="5,5" />
-              <line x1="50" y1="175" x2="350" y2="175" stroke="hsl(var(--border))" strokeWidth="1" strokeDasharray="5,5" />
-              
-              {/* Node markers with pulse animation */}
-              {[
-                { cx: 150, cy: 100, region: "North" },
-                { cx: 250, cy: 100, region: "East" },
-                { cx: 150, cy: 240, region: "West" },
-                { cx: 250, cy: 240, region: "South" },
-              ].map((node, i) => (
-                <g key={i}>
-                  <motion.circle
-                    cx={node.cx}
-                    cy={node.cy}
-                    r="20"
-                    fill="hsl(var(--primary) / 0.2)"
-                    animate={{ r: [20, 30, 20] }}
-                    transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
-                  />
-                  <circle
-                    cx={node.cx}
-                    cy={node.cy}
-                    r="12"
-                    fill="hsl(var(--primary))"
-                    className="drop-shadow-lg"
-                  />
-                  <text
-                    x={node.cx}
-                    y={node.cy + 40}
-                    textAnchor="middle"
-                    className="text-xs font-medium fill-foreground"
-                  >
-                    {node.region} Delhi
-                  </text>
-                </g>
-              ))}
-            </svg>
-          </div>
+          {nodes.length > 0 ? (
+            <DelhiMap
+              nodes={nodes.filter((n) => n.latitude && n.longitude).map((n) => ({
+                ...n,
+                latitude: Number(n.latitude),
+                longitude: Number(n.longitude),
+                animals_under_care: n.animals_under_care ?? 0,
+                volunteers_count: n.volunteers_count ?? 0,
+              }))}
+              ngos={ngos}
+            />
+          ) : (
+            <div className="h-[480px] bg-muted rounded-2xl animate-pulse" />
+          )}
         </div>
 
         {/* Node Cards */}

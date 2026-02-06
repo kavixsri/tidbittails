@@ -71,7 +71,7 @@ const Index = () => {
       <Header />
       <main>
         <HeroSection stats={stats} />
-        <NetworkNodesSection nodes={nodes} isLoading={nodesLoading} />
+        <NetworkNodesSection nodes={nodes} ngos={ngos} isLoading={nodesLoading} />
         <NGODirectorySection ngos={ngos} isLoading={ngosLoading} />
         <EmergencySection />
         <EventsSection events={events} isLoading={eventsLoading} />
