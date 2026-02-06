@@ -52,9 +52,9 @@ export const Footer = () => {
                 <Phone className="w-4 h-4" />
                 <span>+91-123-456-7890 (24/7 Helpline)</span>
               </a>
-              <a href="mailto:contact@tidbittails.org" className="flex items-center gap-2 text-primary-foreground/70 hover:text-primary-foreground transition-colors">
+              <a href="mailto:savestrays14@gmail.com" className="flex items-center gap-2 text-primary-foreground/70 hover:text-primary-foreground transition-colors">
                 <Mail className="w-4 h-4" />
-                <span>contact@tidbittails.org</span>
+                <span>savestrays14@gmail.com</span>
               </a>
               <div className="flex items-start gap-2 text-primary-foreground/70">
                 <MapPin className="w-4 h-4 mt-0.5" />
