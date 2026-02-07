@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Heart, Phone } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
+import logo from "@/assets/tidbit-tails-logo.png";
 import { Button } from "@/components/ui/button";
 
 const navLinks = [
@@ -25,9 +26,8 @@ export const Header = () => {
             <motion.div
               whileHover={{ rotate: [0, -10, 10, 0] }}
               transition={{ duration: 0.5 }}
-              className="w-10 h-10 rounded-full gradient-warm flex items-center justify-center shadow-warm"
             >
-              <Heart className="w-5 h-5 text-primary-foreground" />
+              <img src={logo} alt="Tidbit Tails logo" className="w-10 h-10 rounded-full shadow-warm object-cover" />
             </motion.div>
             <span className="font-heading font-bold text-xl text-foreground">
               TIDBIT <span className="text-primary">TAILS</span>
