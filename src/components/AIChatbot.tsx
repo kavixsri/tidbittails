@@ -152,8 +152,8 @@ export const AIChatbot = () => {
                 <Bot className="w-5 h-5 text-primary-foreground" />
               </div>
               <div>
-                <h3 className="font-heading font-bold text-primary-foreground text-sm">Tidbit Tails AI</h3>
-                <p className="text-primary-foreground/70 text-xs">Ask me anything 🐾</p>
+                <p className="text-primary-foreground/60 text-[10px] leading-tight">Tale of Tails &lt;3</p>
+                <h3 className="font-heading font-bold text-primary-foreground text-sm">Tales AI</h3>
               </div>
             </div>
 
