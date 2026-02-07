@@ -40,6 +40,11 @@ export const Header = () => {
               <a
                 key={link.href}
                 href={link.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  const id = link.href.slice(1);
+                  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+                }}
                 className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
               >
                 {link.label}
@@ -83,7 +88,14 @@ export const Header = () => {
                 <a
                   key={link.href}
                   href={link.href}
-                  onClick={() => setIsOpen(false)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsOpen(false);
+                    setTimeout(() => {
+                      const id = link.href.slice(1);
+                      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+                    }, 100);
+                  }}
                   className="text-base font-medium text-foreground hover:text-primary transition-colors py-2"
                 >
                   {link.label}
