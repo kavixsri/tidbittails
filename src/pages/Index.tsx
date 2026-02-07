@@ -9,6 +9,7 @@ import { EventsSection } from "@/components/EventsSection";
 import { VolunteerSection } from "@/components/VolunteerSection";
 import { PupCafeSection } from "@/components/PupCafeSection";
 import { Footer } from "@/components/Footer";
+import { AIChatbot } from "@/components/AIChatbot";
 
 const Index = () => {
   // Fetch network statistics
@@ -80,6 +81,7 @@ const Index = () => {
         <PupCafeSection ngos={ngos} isLoading={ngosLoading} />
       </main>
       <Footer />
+      <AIChatbot />
     </div>
   );
 };
