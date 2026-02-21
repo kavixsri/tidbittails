@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Loader2, Bot, User } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, Sparkles, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 
@@ -9,9 +9,9 @@ type Message = { role: "user" | "assistant"; content: string };
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
 const QUICK_ACTIONS = [
-  { label: "🐾 About Tidbit Tails", message: "What is Tidbit Tails?" },
+  { label: "🐾 What is Tidbit Tails?", message: "What is Tidbit Tails?" },
   { label: "🚨 Report Emergency", message: "I found an injured animal and need help" },
-  { label: "🤝 Volunteer", message: "How can I volunteer?" },
+  { label: "💛 Volunteer", message: "How can I volunteer?" },
   { label: "☕ Pup Cafés", message: "Tell me about the pup cafés" },
 ];
 
@@ -55,7 +55,7 @@ export const AIChatbot = () => {
 
       if (!resp.ok || !resp.body) {
         const errData = await resp.json().catch(() => ({}));
-        upsert(errData.error || "Sorry, something went wrong. Please try again.");
+        upsert(errData.error || "Oops! Something went wrong. Please try again 🐾");
         setIsLoading(false);
         return;
       }
@@ -88,7 +88,7 @@ export const AIChatbot = () => {
         }
       }
     } catch {
-      upsert("Sorry, I couldn't connect. Please try again later.");
+      upsert("Couldn't connect right now. Try again soon! 🐾");
     }
     setIsLoading(false);
   }, []);
@@ -106,7 +106,6 @@ export const AIChatbot = () => {
     [input, isLoading, messages, streamChat]
   );
 
-  // Handle navigation links in markdown
   const handleClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
     const anchor = target.closest("a");
@@ -120,135 +119,176 @@ export const AIChatbot = () => {
 
   return (
     <>
-      {/* Floating button */}
+      {/* Blossom Floating button */}
       <motion.div
-        className="fixed bottom-6 right-6 z-50"
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 1, type: "spring" }}
+        className="fixed bottom-8 right-8 z-[100]"
+        initial={{ scale: 0, scaleY: 0.5 }}
+        animate={{ scale: 1, scaleY: 1 }}
+        transition={{ delay: 1, type: "spring", stiffness: 260, damping: 20 }}
       >
-        <Button
+        <motion.button
           onClick={() => setIsOpen(!isOpen)}
-          className="w-14 h-14 rounded-full shadow-warm gradient-warm p-0"
+          className="w-16 h-16 rounded-full shadow-glow-primary flex items-center justify-center relative overflow-hidden backdrop-blur-md border-2 border-white/80"
+          style={{ background: "var(--grad-fire)" }}
           aria-label="Open chat"
+          whileHover={{ scale: 1.1, rotate: 5 }}
+          whileTap={{ scale: 0.9 }}
         >
-          {isOpen ? <X className="w-6 h-6 text-primary-foreground" /> : <MessageCircle className="w-6 h-6 text-primary-foreground" />}
-        </Button>
+          <span className="absolute inset-0 rounded-full animate-pulse bg-white/20" />
+          <AnimatePresence mode="wait" initial={false}>
+            {isOpen ? (
+              <motion.div key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }}>
+                <X className="w-6 h-6 text-white" />
+              </motion.div>
+            ) : (
+              <motion.div key="chat" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                <span className="text-3xl">🐾</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.button>
+        {!isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.8 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ delay: 2.5 }}
+            className="absolute bottom-full right-0 mb-4 whitespace-nowrap glass rounded-2xl px-4 py-2 text-[12px] font-black text-foreground shadow-card pointer-events-none border border-white"
+          >
+            Hi! Questions? 🐾
+            <div className="absolute top-full right-6 w-3 h-3 bg-white rotate-45 -translate-y-1.5 border-r border-b border-white/20" />
+          </motion.div>
+        )}
       </motion.div>
 
-      {/* Chat panel */}
+      {/* Blossom Chat panel */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-24 right-6 z-50 w-[360px] max-w-[calc(100vw-2rem)] bg-card border border-border rounded-2xl shadow-xl flex flex-col overflow-hidden"
-            style={{ maxHeight: "min(520px, calc(100vh - 8rem))" }}
+            initial={{ opacity: 0, y: 40, scale: 0.9, filter: "blur(10px)" }}
+            animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+            exit={{ opacity: 0, y: 40, scale: 0.9, filter: "blur(10px)" }}
+            transition={{ type: "spring", stiffness: 350, damping: 30 }}
+            className="fixed bottom-28 right-8 z-[100] w-[380px] max-w-[calc(100vw-2rem)] glass rounded-[32px] shadow-2xl flex flex-col overflow-hidden border border-white/60"
+            style={{ maxHeight: "min(600px, calc(100vh - 10rem))" }}
           >
             {/* Header */}
-            <div className="gradient-warm px-4 py-3 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-primary-foreground/20 flex items-center justify-center">
-                <Bot className="w-5 h-5 text-primary-foreground" />
+            <div className="px-6 py-5 flex items-center gap-4 relative overflow-hidden" style={{ background: "var(--grad-fire)" }}>
+              <div className="absolute inset-0 shimmer opacity-20" />
+              <motion.div
+                animate={{ rotate: [0, 8, -8, 0], scale: [1, 1.1, 1] }}
+                transition={{ duration: 3, repeat: Infinity }}
+                className="relative w-12 h-12 rounded-2xl bg-white/30 backdrop-blur-md flex items-center justify-center text-2xl flex-shrink-0 shadow-inner"
+              >
+                🐶
+              </motion.div>
+              <div className="relative">
+                <h3 className="font-black text-white text-[16px] tracking-tight" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>Tales Assistant</h3>
+                <p className="text-white/80 text-[10px] font-bold uppercase tracking-widest">Always here to help 🌸</p>
               </div>
-              <div>
-                <p className="text-primary-foreground/60 text-[10px] leading-tight">Tale of Tails &lt;3</p>
-                <h3 className="font-heading font-bold text-primary-foreground text-sm">Tales AI</h3>
+              <div className="ml-auto relative flex items-center gap-1.5 bg-white/20 px-2 py-1 rounded-full">
+                <span className="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.6)]" />
+                <span className="text-white/90 text-[9px] font-black uppercase">Active</span>
               </div>
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-3 space-y-3" onClick={handleClick}>
+            <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-white/40" onClick={handleClick}>
               {messages.length === 0 && (
-                <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground text-center py-2">
-                    Hi! I'm your Tidbit Tails assistant. How can I help?
-                  </p>
-                  <div className="grid grid-cols-2 gap-2">
-                    {QUICK_ACTIONS.map((qa) => (
-                      <button
+                <div className="space-y-4 py-4">
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-sm text-foreground/70 text-center font-bold px-4"
+                  >
+                    Woof! I'm your Blossom companion. <br /> How can I brighten your day? 🐾
+                  </motion.div>
+                  <div className="grid grid-cols-1 gap-2">
+                    {QUICK_ACTIONS.map((qa, i) => (
+                      <motion.button
                         key={qa.label}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.2 + i * 0.1 }}
                         onClick={() => handleSend(qa.message)}
-                        className="text-xs text-left px-3 py-2 rounded-lg bg-muted hover:bg-muted/80 text-foreground transition-colors"
+                        className="text-[13px] text-left px-5 py-3 rounded-2xl glass hover:bg-white transition-all duration-300 text-foreground font-black border border-white/40 hover:shadow-md hover:-translate-y-0.5"
                       >
                         {qa.label}
-                      </button>
+                      </motion.button>
                     ))}
                   </div>
                 </div>
               )}
 
               {messages.map((msg, i) => (
-                <div
+                <motion.div
                   key={i}
-                  className={`flex gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   {msg.role === "assistant" && (
-                    <div className="w-6 h-6 rounded-full gradient-warm flex-shrink-0 flex items-center justify-center mt-1">
-                      <Bot className="w-3.5 h-3.5 text-primary-foreground" />
-                    </div>
+                    <div className="w-8 h-8 rounded-full shadow-sm flex-shrink-0 flex items-center justify-center text-lg mt-1 border border-white" style={{ background: "var(--grad-honey)" }}>🌸</div>
                   )}
                   <div
-                    className={`max-w-[80%] rounded-xl px-3 py-2 text-sm ${
-                      msg.role === "user"
-                        ? "bg-primary text-primary-foreground rounded-br-sm"
-                        : "bg-muted text-foreground rounded-bl-sm"
-                    }`}
+                    className={`max-w-[85%] rounded-[24px] px-5 py-3 text-[14px] font-medium shadow-sm transition-all ${msg.role === "user"
+                      ? "bg-primary text-white rounded-br-none"
+                      : "glass text-foreground rounded-bl-none border border-white/60"
+                      }`}
                   >
                     {msg.role === "assistant" ? (
-                      <div className="prose prose-sm max-w-none [&_p]:m-0 [&_ul]:mt-1 [&_ol]:mt-1 [&_a]:text-primary [&_a]:underline">
+                      <div className="prose prose-sm max-w-none prose-p:leading-relaxed prose-strong:text-primary prose-a:text-primary prose-a:font-black">
                         <ReactMarkdown>{msg.content}</ReactMarkdown>
                       </div>
                     ) : (
                       msg.content
                     )}
                   </div>
-                  {msg.role === "user" && (
-                    <div className="w-6 h-6 rounded-full bg-primary/10 flex-shrink-0 flex items-center justify-center mt-1">
-                      <User className="w-3.5 h-3.5 text-primary" />
-                    </div>
-                  )}
-                </div>
+                </motion.div>
               ))}
 
               {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
-                <div className="flex gap-2">
-                  <div className="w-6 h-6 rounded-full gradient-warm flex-shrink-0 flex items-center justify-center">
-                    <Bot className="w-3.5 h-3.5 text-primary-foreground" />
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-3">
+                  <div className="w-8 h-8 rounded-full shadow-sm flex-shrink-0 flex items-center justify-center text-lg border border-white" style={{ background: "var(--grad-honey)" }}>🌸</div>
+                  <div className="glass rounded-[24px] rounded-bl-none px-5 py-4 flex items-center gap-2 border border-white/60">
+                    {[0, 0.2, 0.4].map((d) => (
+                      <motion.div
+                        key={d}
+                        className="w-2.5 h-2.5 rounded-full bg-primary/40"
+                        animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
+                        transition={{ duration: 0.8, repeat: Infinity, delay: d }}
+                      />
+                    ))}
                   </div>
-                  <div className="bg-muted rounded-xl px-3 py-2">
-                    <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
-                  </div>
-                </div>
+                </motion.div>
               )}
               <div ref={messagesEndRef} />
             </div>
 
             {/* Input */}
-            <div className="border-t border-border p-3">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleSend();
-                }}
-                className="flex gap-2"
-              >
+            <div className="p-4 bg-white/60 backdrop-blur-xl border-t border-white/40">
+              <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex gap-2">
                 <input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Type a message..."
-                  className="flex-1 text-sm bg-muted rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-primary/30 text-foreground placeholder:text-muted-foreground"
+                  placeholder="Ask your companion..."
+                  className="flex-1 text-[14px] glass rounded-full px-6 py-3 outline-none focus:ring-2 focus:ring-primary/30 text-foreground placeholder:text-muted-foreground/60 font-black transition-all border border-white/60"
                   disabled={isLoading}
                 />
-                <Button
+                <motion.button
                   type="submit"
-                  size="icon"
                   disabled={isLoading || !input.trim()}
-                  className="rounded-lg flex-shrink-0"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="w-12 h-12 rounded-full text-white flex items-center justify-center flex-shrink-0 disabled:opacity-40 shadow-glow-primary border-2 border-white/40"
+                  style={{ background: "var(--grad-fire)" }}
                 >
-                  <Send className="w-4 h-4" />
-                </Button>
+                  {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+                </motion.button>
               </form>
+              <div className="flex items-center justify-center gap-2 mt-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/50">
+                <Sparkles className="w-3 h-3" />
+                Tales Blossom AI
+              </div>
             </div>
           </motion.div>
         )}
