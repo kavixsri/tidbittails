@@ -1,73 +1,40 @@
-# Welcome to your Lovable project
+# TIDBIT TAILS WEB 🐾
 
-## Project info
+The official web platform for **Tidbit Tails**, Delhi's premium animal welfare network. Built with a high-end "Blossom" aesthetic, featuring glassmorphism, animated micro-interactions, and a custom particle cursor.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 🌸 Key Features
+- **Modern Blossom Aesthetic**: Soft florals, floating petals, and premium glassmorphism.
+- **🐾 Custom Cursor Trail**: Interactive paw-print and star particle trail.
+- **🚨 Rapid Emergency Reporting**: Direct pipeline for animal rescue alerts.
+- **🤝 NGO Directory**: Unified network of regional animal welfare organizations.
+- **💬 Blossom AI**: A compassionate AI companion for animal welfare inquiries.
 
-## How can I edit this code?
+## 🚀 Tech Stack
+- **Framework**: React + Vite
+- **Styling**: Tailwind CSS + Framer Motion
+- **Database/Auth**: Supabase
+- **Icons**: Lucide React
+- **Typography**: Bricolage Grotesque & Nunito
 
-There are several ways of editing your application.
+## 🛠️ Deployment (Vercel)
 
-**Use Lovable**
+This project is optimized for deployment on Vercel.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+1. **Environment Variables**:
+   Add the following in your Vercel Project Settings:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_PUBLISHABLE_KEY`
 
-Changes made via Lovable will be committed automatically to this repo.
+2. **Build Settings**:
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+   - Framework Preset: `Vite`
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+## 👨‍💻 Local Development
+```bash
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+---
+Built with ❤️ for the street animals of Delhi.
