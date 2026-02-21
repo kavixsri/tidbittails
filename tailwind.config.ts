@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Nunito', 'sans-serif'],
-        heading: ['Poppins', 'sans-serif'],
+        heading: ['Bricolage Grotesque', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
