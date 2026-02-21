@@ -51,7 +51,7 @@ const container = {
   hidden: {},
   show: { transition: { staggerChildren: 0.12, delayChildren: 0.2 } },
 };
-const item = { hidden: { opacity: 0, y: 28 }, show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 80 } } };
+const item = { hidden: { opacity: 0, y: 28 }, show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 80 } } };
 
 // Decorative petal component
 const FloatingPetal = ({ top, left, delay, color, scale }: { top: string, left: string, delay: number, color: string, scale: number }) => (
