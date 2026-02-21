@@ -1,298 +1,234 @@
 import { useState } from "react";
+import type { Variants } from "framer-motion";
 import { motion } from "framer-motion";
-import { Heart, Users, Clock, Award, Send, Loader2 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Heart, Users, Clock, Award, Send, Loader2, CheckCircle2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 const regions = ["North Delhi", "South Delhi", "East Delhi", "West Delhi", "Any Region"];
 const skillOptions = [
-  "Animal Handling",
-  "First Aid",
-  "Driving",
-  "Photography",
-  "Social Media",
-  "Event Management",
-  "Fundraising",
-  "Veterinary",
+  { label: "Animal Handling", emoji: "🐾" },
+  { label: "First Aid", emoji: "🩺" },
+  { label: "Driving", emoji: "🚗" },
+  { label: "Photography", emoji: "📸" },
+  { label: "Social Media", emoji: "📱" },
+  { label: "Event Management", emoji: "🎪" },
+  { label: "Fundraising", emoji: "💝" },
+  { label: "Veterinary", emoji: "💊" },
 ];
 
 const benefits = [
-  {
-    icon: Heart,
-    title: "Make a Difference",
-    description: "Directly impact the lives of animals in need",
-  },
-  {
-    icon: Users,
-    title: "Join a Community",
-    description: "Connect with like-minded animal lovers",
-  },
-  {
-    icon: Clock,
-    title: "Flexible Hours",
-    description: "Volunteer on your own schedule",
-  },
-  {
-    icon: Award,
-    title: "Gain Experience",
-    description: "Learn valuable skills and get certified",
-  },
+  { icon: Heart, label: "Make a Difference", sub: "Directly save animal lives", color: "#f72585", bg: "var(--grad-candy)" },
+  { icon: Users, label: "Join a Community", sub: "Connect with fellow animal lovers", color: "#118ab2", bg: "var(--grad-ocean)" },
+  { icon: Clock, label: "Flexible Hours", sub: "Serve on your own schedule", color: "#ff7b00", bg: "var(--grad-honey)" },
+  { icon: Award, label: "Get Certified", sub: "Build skills & earn recognition", color: "#9b5de5", bg: "var(--grad-candy)" },
 ];
+
+const empty = { name: "", email: "", phone: "", preferred_region: "", availability: "", experience: "", motivation: "" };
+const stagger: Variants = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
+const item: Variants = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 80 } } };
 
 export const VolunteerSection = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    preferred_region: "",
-    availability: "",
-    experience: "",
-    motivation: "",
-  });
+  const [formData, setFormData] = useState(empty);
+  const set = (k: string, v: string) => setFormData((f) => ({ ...f, [k]: v }));
+
+  const toggleSkill = (skill: string) =>
+    setSelectedSkills((prev) => prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
     try {
-      const { error } = await supabase.from("volunteers").insert([{
-        ...formData,
-        skills: selectedSkills,
-      }]);
-
+      const { error } = await supabase.from("volunteers").insert([{ ...formData, skills: selectedSkills }]);
       if (error) throw error;
-
-      toast({
-        title: "Application Submitted! 🎉",
-        description: "Thank you for wanting to help! We'll contact you within 48 hours.",
-      });
-
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        preferred_region: "",
-        availability: "",
-        experience: "",
-        motivation: "",
-      });
-      setSelectedSkills([]);
-    } catch (error) {
-      console.error("Error submitting:", error);
-      toast({
-        title: "Submission Failed",
-        description: "Please try again later.",
-        variant: "destructive",
-      });
+      setSubmitted(true);
+      toast({ title: "Application Submitted! 🎉", description: "Thank you! We'll contact you within 48 hours." });
+    } catch {
+      toast({ title: "Submission Failed", description: "Please try again later.", variant: "destructive" });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const toggleSkill = (skill: string) => {
-    setSelectedSkills((prev) =>
-      prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill]
-    );
-  };
-
   return (
-    <section id="volunteer" className="py-20">
-      <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
-        >
-          <span className="inline-block px-4 py-2 bg-secondary/10 text-secondary rounded-full text-sm font-medium mb-4">
-            <Heart className="w-4 h-4 inline mr-1" />
+    <section id="volunteer" className="py-24 relative overflow-hidden">
+      {/* Section background */}
+      <div className="absolute inset-0 -z-10" style={{ background: "linear-gradient(160deg, hsl(162 50% 96%) 0%, hsl(258 40% 97%) 100%)" }} />
+      <div className="absolute top-12 right-4 w-72 h-72 blob float opacity-[0.08]" style={{ background: "var(--grad-candy)" }} />
+      <div className="absolute bottom-12 left-4 w-56 h-56 blob-3 float-3 opacity-[0.06]" style={{ background: "var(--grad-ocean)" }} />
+
+      <div className="container mx-auto px-5 md:px-8 relative z-10">
+        {/* Section header */}
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-14">
+          <span className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.16em] mb-4" style={{ color: "#9b5de5" }}>
+            <span className="w-8 h-[2px] rounded-full" style={{ background: "var(--grad-candy)" }} />
             Join Our Team
+            <span className="w-8 h-[2px] rounded-full" style={{ background: "var(--grad-candy)" }} />
           </span>
-          <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-4">
-            Become a Volunteer
+          <h2 className="text-[clamp(34px,5vw,58px)] font-black leading-none text-foreground" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>
+            Become a<br />
+            <span className="text-gradient-violet">Volunteer</span> 🤍
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Be a part of Delhi's largest animal welfare network. No experience needed - 
-            just a heart full of compassion.
+          <p className="mt-4 text-muted-foreground text-[15px] max-w-lg leading-relaxed font-medium">
+            No experience needed — just compassion and a willingness to show up. Join Delhi's largest animal welfare network today.
           </p>
         </motion.div>
 
-        {/* Benefits */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {benefits.map((benefit, index) => (
-            <motion.div
-              key={benefit.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <Card className="text-center h-full hover:shadow-soft transition-shadow">
-                <CardContent className="pt-6">
-                  <div className="w-14 h-14 rounded-full gradient-cool mx-auto mb-4 flex items-center justify-center">
-                    <benefit.icon className="w-7 h-7 text-accent-foreground" />
-                  </div>
-                  <h3 className="font-heading font-semibold text-foreground mb-2">
-                    {benefit.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">{benefit.description}</p>
-                </CardContent>
-              </Card>
+        <div className="grid lg:grid-cols-5 gap-8 items-start">
+          {/* Left: benefits + testimonial */}
+          <motion.div
+            className="lg:col-span-2 space-y-4"
+            variants={stagger}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+          >
+            {benefits.map((b, i) => (
+              <motion.div
+                key={b.label}
+                variants={item}
+                className={`glass-card rounded-[20px] p-5 flex items-center gap-4 relative overflow-hidden hover:-translate-y-0.5 transition-transform ${i % 2 === 1 ? "tilt-card-right" : "tilt-card"}`}
+              >
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md" style={{ background: b.bg }}>
+                  <b.icon className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h4 className="font-black text-[14px] text-foreground" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>{b.label}</h4>
+                  <p className="text-muted-foreground text-[12px] font-medium mt-0.5">{b.sub}</p>
+                </div>
+                <div className="absolute -right-4 -bottom-4 w-16 h-16 rounded-full opacity-10" style={{ background: b.bg }} />
+              </motion.div>
+            ))}
+
+            {/* Quick stat strip */}
+            <motion.div variants={item} className="rounded-[20px] p-5 relative overflow-hidden" style={{ background: "var(--grad-dusk)" }}>
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute top-2 right-4 text-6xl select-none">🏆</div>
+              </div>
+              <p className="text-white/70 text-[12px] font-bold uppercase tracking-wider mb-1">Community Milestone</p>
+              <p className="text-white font-black text-[28px] leading-none" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>716+</p>
+              <p className="text-white/60 text-[13px] font-medium">active volunteers across Delhi</p>
             </motion.div>
-          ))}
+          </motion.div>
+
+          {/* Right: form */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="lg:col-span-3"
+          >
+            {submitted ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.85 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="glass-card rounded-3xl p-10 text-center"
+              >
+                <CheckCircle2 className="w-16 h-16 mx-auto mb-4" style={{ color: "#06d6a0" }} />
+                <h3 className="font-black text-2xl mb-2 text-foreground" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>Welcome to the team! 🎉</h3>
+                <p className="text-muted-foreground font-medium">We'll review your application and get back to you within 48 hours. Get ready to make a difference!</p>
+              </motion.div>
+            ) : (
+              <div className="glass-card rounded-3xl p-7 shadow-card">
+                <h3 className="font-black text-[18px] mb-6 text-foreground" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>
+                  Volunteer Application
+                </h3>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="v-name" className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Full Name *</Label>
+                      <Input id="v-name" required value={formData.name} onChange={(e) => set("name", e.target.value)} placeholder="Your name" className="rounded-xl h-11 text-[13px] glass-sm border-white/30" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="v-email" className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Email *</Label>
+                      <Input id="v-email" type="email" required value={formData.email} onChange={(e) => set("email", e.target.value)} placeholder="you@email.com" className="rounded-xl h-11 text-[13px] glass-sm border-white/30" />
+                    </div>
+                  </div>
+
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="v-phone" className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Phone *</Label>
+                      <Input id="v-phone" type="tel" required value={formData.phone} onChange={(e) => set("phone", e.target.value)} placeholder="+91 98765 43210" className="rounded-xl h-11 text-[13px] glass-sm border-white/30" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Preferred Region</Label>
+                      <Select value={formData.preferred_region} onValueChange={(v) => set("preferred_region", v)}>
+                        <SelectTrigger className="rounded-xl h-11 text-[13px] glass-sm border-white/30">
+                          <SelectValue placeholder="Select region" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {regions.map((r) => <SelectItem key={r} value={r}>{r}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  {/* Skills picker */}
+                  <div className="space-y-2">
+                    <Label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Skills (select all that apply)</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {skillOptions.map((s) => {
+                        const active = selectedSkills.includes(s.label);
+                        return (
+                          <button
+                            key={s.label}
+                            type="button"
+                            onClick={() => toggleSkill(s.label)}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[12px] font-bold transition-all duration-200"
+                            style={active
+                              ? { background: "var(--grad-candy)", color: "#fff", boxShadow: "var(--shadow-glow-violet)" }
+                              : { background: "hsl(var(--muted))", color: "hsl(var(--muted-foreground))" }
+                            }
+                          >
+                            {s.emoji} {s.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label htmlFor="v-avail" className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Availability</Label>
+                    <Input id="v-avail" value={formData.availability} onChange={(e) => set("availability", e.target.value)} placeholder="e.g., Weekends, 2-3 hrs on Saturdays" className="rounded-xl h-11 text-[13px] glass-sm border-white/30" />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label htmlFor="v-motiv" className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Why you want to volunteer *</Label>
+                    <Textarea
+                      id="v-motiv"
+                      required
+                      value={formData.motivation}
+                      onChange={(e) => set("motivation", e.target.value)}
+                      placeholder="Share what drives you to help animals..."
+                      rows={3}
+                      className="rounded-xl text-[13px] glass-sm border-white/30 resize-none"
+                    />
+                  </div>
+
+                  <motion.button
+                    type="submit"
+                    disabled={isSubmitting}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="w-full py-4 rounded-2xl text-white font-black text-[14px] flex items-center justify-center gap-2 disabled:opacity-60 relative overflow-hidden"
+                    style={{ background: "var(--grad-dusk)" }}
+                  >
+                    {isSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Submitting...</> : <><Send className="w-4 h-4" /> Submit Application</>}
+                  </motion.button>
+                </form>
+              </div>
+            )}
+          </motion.div>
         </div>
-
-        {/* Application Form */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-2xl mx-auto"
-        >
-          <Card>
-            <CardHeader>
-              <CardTitle>Volunteer Application</CardTitle>
-              <CardDescription>
-                Fill out this form and we'll get back to you within 48 hours.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="vol-name">Full Name *</Label>
-                    <Input
-                      id="vol-name"
-                      required
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="Enter your name"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="vol-email">Email *</Label>
-                    <Input
-                      id="vol-email"
-                      type="email"
-                      required
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      placeholder="your@email.com"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="vol-phone">Phone Number *</Label>
-                    <Input
-                      id="vol-phone"
-                      type="tel"
-                      required
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      placeholder="+91 98765 43210"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="vol-region">Preferred Region</Label>
-                    <Select
-                      value={formData.preferred_region}
-                      onValueChange={(value) => setFormData({ ...formData, preferred_region: value })}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select region" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {regions.map((region) => (
-                          <SelectItem key={region} value={region}>{region}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Skills (select all that apply)</Label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {skillOptions.map((skill) => (
-                      <div key={skill} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={skill}
-                          checked={selectedSkills.includes(skill)}
-                          onCheckedChange={() => toggleSkill(skill)}
-                        />
-                        <label
-                          htmlFor={skill}
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          {skill}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="vol-availability">Availability</Label>
-                  <Input
-                    id="vol-availability"
-                    value={formData.availability}
-                    onChange={(e) => setFormData({ ...formData, availability: e.target.value })}
-                    placeholder="e.g., Weekends, 2-3 hours on Saturdays"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="vol-experience">Previous Experience (if any)</Label>
-                  <Textarea
-                    id="vol-experience"
-                    value={formData.experience}
-                    onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
-                    placeholder="Tell us about any relevant experience with animals or volunteering"
-                    rows={3}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="vol-motivation">Why do you want to volunteer? *</Label>
-                  <Textarea
-                    id="vol-motivation"
-                    required
-                    value={formData.motivation}
-                    onChange={(e) => setFormData({ ...formData, motivation: e.target.value })}
-                    placeholder="Share what motivates you to help animals"
-                    rows={3}
-                  />
-                </div>
-
-                <Button type="submit" variant="secondary" className="w-full" disabled={isSubmitting}>
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Submitting...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4 mr-2" />
-                      Submit Application
-                    </>
-                  )}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </motion.div>
       </div>
     </section>
   );
