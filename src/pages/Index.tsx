@@ -10,36 +10,27 @@ import { VolunteerSection } from "@/components/VolunteerSection";
 import { PupCafeSection } from "@/components/PupCafeSection";
 import { Footer } from "@/components/Footer";
 import { AIChatbot } from "@/components/AIChatbot";
+import { CursorTrail } from "@/components/CursorTrail";
 
 const Index = () => {
-  // Fetch network statistics
   const { data: stats } = useQuery({
     queryKey: ["network-stats"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("network_stats")
-        .select("*")
-        .limit(1)
-        .single();
+      const { data, error } = await supabase.from("network_stats").select("*").limit(1).single();
       if (error) throw error;
       return data;
     },
   });
 
-  // Fetch regional nodes
   const { data: nodes = [], isLoading: nodesLoading } = useQuery({
     queryKey: ["regional-nodes"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("regional_nodes")
-        .select("*")
-        .order("region");
+      const { data, error } = await supabase.from("regional_nodes").select("*").order("region");
       if (error) throw error;
       return data;
     },
   });
 
-  // Fetch NGOs
   const { data: ngos = [], isLoading: ngosLoading } = useQuery({
     queryKey: ["ngos"],
     queryFn: async () => {
@@ -53,7 +44,6 @@ const Index = () => {
     },
   });
 
-  // Fetch upcoming events
   const { data: events = [], isLoading: eventsLoading } = useQuery({
     queryKey: ["events"],
     queryFn: async () => {
@@ -69,7 +59,8 @@ const Index = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" style={{ cursor: "none" }}>
+      <CursorTrail />
       <Header />
       <main>
         <HeroSection stats={stats} />
