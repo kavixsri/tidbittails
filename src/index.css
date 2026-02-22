@@ -94,6 +94,19 @@
 
   html {
     scroll-behavior: smooth;
+    cursor: url('/paw-cursor.svg') 16 16, auto;
+  }
+
+  html:active {
+    cursor: url('/paw-cursor-click.svg') 14 14, auto;
+  }
+
+  a, button, [role="button"], input[type="submit"], select, label[for] {
+    cursor: url('/paw-cursor.svg') 16 16, pointer !important;
+  }
+
+  a:active, button:active, [role="button"]:active, input[type="submit"]:active, select:active {
+    cursor: url('/paw-cursor-click.svg') 14 14, pointer !important;
   }
 
   body {
