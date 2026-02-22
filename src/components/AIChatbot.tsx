@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send, Loader2, Sparkles, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
+import ginnieMascot from "@/assets/ginnie-mascot.png";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -142,7 +143,7 @@ export const AIChatbot = () => {
               </motion.div>
             ) : (
               <motion.div key="chat" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                <span className="text-3xl">🐾</span>
+                <img src={ginnieMascot} alt="Ginnie" className="w-10 h-10 object-contain" />
               </motion.div>
             )}
           </AnimatePresence>
@@ -154,7 +155,7 @@ export const AIChatbot = () => {
             transition={{ delay: 2.5 }}
             className="absolute bottom-full right-0 mb-4 whitespace-nowrap glass rounded-2xl px-4 py-2 text-[12px] font-black text-foreground shadow-card pointer-events-none border border-white"
           >
-            Hi! Questions? 🐾
+            Hi! I'm Ginnie! 🐾
             <div className="absolute top-full right-6 w-3 h-3 bg-white rotate-45 -translate-y-1.5 border-r border-b border-white/20" />
           </motion.div>
         )}
@@ -177,13 +178,13 @@ export const AIChatbot = () => {
               <motion.div
                 animate={{ rotate: [0, 8, -8, 0], scale: [1, 1.1, 1] }}
                 transition={{ duration: 3, repeat: Infinity }}
-                className="relative w-12 h-12 rounded-2xl bg-white/30 backdrop-blur-md flex items-center justify-center text-2xl flex-shrink-0 shadow-inner"
+                className="relative w-12 h-12 rounded-2xl bg-white/30 backdrop-blur-md flex items-center justify-center overflow-hidden flex-shrink-0 shadow-inner"
               >
-                🐶
+                <img src={ginnieMascot} alt="Ginnie" className="w-10 h-10 object-contain" />
               </motion.div>
               <div className="relative">
-                <h3 className="font-black text-white text-[16px] tracking-tight" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>Tales Assistant</h3>
-                <p className="text-white/80 text-[10px] font-bold uppercase tracking-widest">Always here to help 🌸</p>
+                <h3 className="font-black text-white text-[16px] tracking-tight" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>Ginnie AI</h3>
+                <p className="text-white/80 text-[10px] font-bold uppercase tracking-widest">Your guide to Tidbit Tails 🐾</p>
               </div>
               <div className="ml-auto relative flex items-center gap-1.5 bg-white/20 px-2 py-1 rounded-full">
                 <span className="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.6)]" />
@@ -200,7 +201,7 @@ export const AIChatbot = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-sm text-foreground/70 text-center font-bold px-4"
                   >
-                    Woof! I'm your Blossom companion. <br /> How can I brighten your day? 🐾
+                    Woof! I'm Ginnie! 🐾 <br /> Let me help you explore Tidbit Tails!
                   </motion.div>
                   <div className="grid grid-cols-1 gap-2">
                     {QUICK_ACTIONS.map((qa, i) => (
@@ -227,7 +228,7 @@ export const AIChatbot = () => {
                   className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   {msg.role === "assistant" && (
-                    <div className="w-8 h-8 rounded-full shadow-sm flex-shrink-0 flex items-center justify-center text-lg mt-1 border border-white" style={{ background: "var(--grad-honey)" }}>🌸</div>
+                    <div className="w-8 h-8 rounded-full shadow-sm flex-shrink-0 flex items-center justify-center overflow-hidden mt-1 border border-white" style={{ background: "var(--grad-honey)" }}><img src={ginnieMascot} alt="Ginnie" className="w-7 h-7 object-contain" /></div>
                   )}
                   <div
                     className={`max-w-[85%] rounded-[24px] px-5 py-3 text-[14px] font-medium shadow-sm transition-all ${msg.role === "user"
@@ -248,7 +249,7 @@ export const AIChatbot = () => {
 
               {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full shadow-sm flex-shrink-0 flex items-center justify-center text-lg border border-white" style={{ background: "var(--grad-honey)" }}>🌸</div>
+                  <div className="w-8 h-8 rounded-full shadow-sm flex-shrink-0 flex items-center justify-center overflow-hidden border border-white" style={{ background: "var(--grad-honey)" }}><img src={ginnieMascot} alt="Ginnie" className="w-7 h-7 object-contain" /></div>
                   <div className="glass rounded-[24px] rounded-bl-none px-5 py-4 flex items-center gap-2 border border-white/60">
                     {[0, 0.2, 0.4].map((d) => (
                       <motion.div
@@ -287,7 +288,7 @@ export const AIChatbot = () => {
               </form>
               <div className="flex items-center justify-center gap-2 mt-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/50">
                 <Sparkles className="w-3 h-3" />
-                Tales Blossom AI
+                Ginnie AI · Tidbit Tails
               </div>
             </div>
           </motion.div>
