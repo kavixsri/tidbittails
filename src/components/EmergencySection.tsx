@@ -36,10 +36,16 @@ export const EmergencySection = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.from("emergencies").insert([formData]);
+      const { reporter_email, ...rest } = formData;
+      const payload = reporter_email ? { ...rest, reporter_email } : rest;
+      const { error } = await supabase.from("emergencies").insert([payload]);
       if (error) throw error;
       setSubmitted(true);
-      toast({ title: "Emergency Reported! 🚨", description: "Rescue team notified. We'll call you shortly." });
+      toast({
+        title: "✅ SUBMITTED",
+        description: "We will get back to you shortly!",
+        className: "bg-green-600 text-white border-green-700",
+      });
       setTimeout(() => { setSubmitted(false); setFormData(empty); }, 4500);
     } catch {
       toast({ title: "Error", description: "Failed to submit. Please call our helpline directly.", variant: "destructive" });
