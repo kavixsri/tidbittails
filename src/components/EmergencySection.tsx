@@ -17,7 +17,7 @@ const urgencyLevels = [
 ];
 
 const empty = {
-  reporter_name: "", reporter_phone: "", reporter_email: "",
+  reporter_name: "", reporter_phone: "", reporter_email: null as string | null,
   animal_type: "", description: "", location: "", urgency: "medium",
 };
 
